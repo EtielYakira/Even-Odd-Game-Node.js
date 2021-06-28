@@ -10,36 +10,34 @@ const progressBar = new ProgressBar(':bar :percent', {
     incomplete:'▢'
 })
 
-
-
-
-const playerOneName = prompt(chalk.red('player '+ 1) +' name: ')
-
-console.log(`hey ${playerOneName}`)
-
-const playerTwoName = prompt(chalk.underline(chalk.green('player '+ 2) +' name: '))
-console.log(`hey ${playerTwoName}`)
-
-console.log('game loading');
-
 function Player(name){
     this.name = name
     this.score = 0
+
+    this.toString = () => this.name
 }
 
 const game ={
     round:0,
-    playerOne:{
-        name:playerOneName,
-        score:0
-    },
-    playerTwo:{
-        name:playerTwoName,
-        score:0
-    },
+    players:[],
     bestOf:5,
     randomNumberForGame:() => randomNumberBetween(13,-5)
 }
+
+let numberOfPlayers = prompt('Hey! how many Players are playing? (2-7)')
+while(!(numberOfPlayers >= 2 && numberOfPlayers <= 7)){
+    numberOfPlayers = prompt('Hey! how many Players are playing? (2-7)')
+}
+
+for (let player = 1; player <= numberOfPlayers; player++) {
+    const playerName = prompt(chalk.red('player '+ player) +' name: ')
+    let currPlayer = new Player(playerName)
+    console.log(`hey ${playerName}`) 
+    game.players.push(currPlayer)
+
+}
+console.log('game loading');
+
     const timer = setInterval(() => {
         progressBar.tick();
         if(progressBar.complete) {
@@ -47,22 +45,25 @@ const game ={
             
             console.log('lets Play!');
             setTimeout(() =>{
-                while (game.round < game.bestOf) {
-                    let pointsToWin = Math.ceil(game.bestOf/2)
+                let pointsToWin = Math.ceil(game.bestOf/2)
+                while (true) {
                     const currentRandomNumber = game.randomNumberForGame() 
+                    let playerOneNumber = randomNumberBetween(game.players.length-1)
+                    let playerOne = game.players[playerOneNumber]
+                    let playerTwo = game.players[randomNumberBetween(game.players.length-1,0,playerOneNumber)]
                     game.round++
                     console.log(`round ${game.round}`);
+                    console.log(`between ${playerOne} and ${playerTwo}`);
                     console.log(`the number is: ${currentRandomNumber}`);
                     currentRandomNumber % 2 === 0 ? 
-                    game.playerOne.score++
-                    : game.playerTwo.score++
-                    console.log(game.playerOne.name ,'have', game.playerOne.score);
-                    console.log(game.playerTwo.name ,'have', game.playerTwo.score);
-                    if(game.playerOne.score === pointsToWin){
-                        game.winner = game.playerOne.name
+                    playerOne.score++
+                    : playerTwo.score++
+                    console.table(game.players.sort((player1,player2) => player2.score - player1.score))
+                    if(playerOne.score === pointsToWin){
+                        game.winner = playerOne.name
                         break
-                    }else if(game.playerTwo.score === pointsToWin){
-                        game.winner = game.playerTwo.name
+                    }else if(playerTwo.score === pointsToWin){
+                        game.winner = playerTwo.name
                         break
                     }
                 }
@@ -76,4 +77,3 @@ const game ={
 
 
 
-    // console.table([{name:'eli',score:1},{name:'bibi',score:1},{name:'ww',score:2}].sort((player1,player2) => player2.score - player1.score))
