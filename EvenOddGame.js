@@ -73,7 +73,8 @@ console.log('game loading');
                         break
                     }
                 }
-
+                let scoreTable = game.players.sort((player1,player2) => player2.score - player1.score).reduce((acc,player,index) => {acc[index+1]=player; return acc},{})
+                console.table(scoreTable)
                 console.log(`WINNER IS ${game.winner} 🏆🏆🏆`);
             },1000)
 
