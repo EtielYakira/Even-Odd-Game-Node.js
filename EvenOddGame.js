@@ -56,6 +56,10 @@ const game ={
                     currentRandomNumber % 2 === 0 ? 
                     game.playerOne.score++
                     : game.playerTwo.score++
+                    game.playerOne.score > game.playerTwo.score ? 
+                    console.log(`${game.playerOne.name} WON !! 🎊🎊`):
+                    console.log(`${game.playerTwo.name} WON !! 🎊🎊`)
+
                     console.log(game.playerOne.name ,'have', game.playerOne.score);
                     console.log(game.playerTwo.name ,'have', game.playerTwo.score);
                     if(game.playerOne.score === pointsToWin){
@@ -67,7 +71,7 @@ const game ={
                     }
                 }
 
-                console.log(`WINNER IS ${game.winner}`);
+                console.log(`WINNER IS ${game.winner} 🏆🏆🏆`);
             },1000)
 
         }
