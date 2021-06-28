@@ -3,8 +3,14 @@ const prompt = require('prompt-sync')()
 const chalk = require('chalk');
 const ProgressBar = require('progress');
 const { table } = require('console');
+const PvP = require('./PvP')
 
 const progressBar = new ProgressBar(':bar :percent', {
+    total:20,
+    complete:'■',
+    incomplete:'▢'
+})
+const bossLoadingBar = new ProgressBar(':bar :percent', {
     total:20,
     complete:'■',
     incomplete:'▢'
@@ -17,12 +23,20 @@ function Player(name){
     this.toString = () => this.name
 }
 
-const game ={
-    round:0,
-    players:[],
-    bestOf:5,
-    randomNumberForGame:() => randomNumberBetween(13,-5)
+function Game(players,bestOf){
+    this.round = 0
+    this.players = players || []
+    this.bestOf = bestOf || 5
+    this.randomNumberForGame = () => randomNumberBetween(13,-5)
 }
+
+    const game =new Game()
+// const game ={
+//     round:0,
+//     players:[],
+//     bestOf:5,
+//     randomNumberForGame:() => randomNumberBetween(13,-5)
+// }
 
 let numberOfPlayers = prompt('Hey! how many Players are playing? (2-7)')
 while(!(numberOfPlayers >= 2 && numberOfPlayers <= 7)){
@@ -45,39 +59,21 @@ console.log('game loading');
             
             console.log('lets Play!');
             setTimeout(() =>{
-                let pointsToWin = Math.ceil(game.bestOf/2)
-                while (true) {
-                    const currentRandomNumber = game.randomNumberForGame() 
-                    let playerOneNumber = randomNumberBetween(game.players.length-1)
-                    let playerOne = game.players[playerOneNumber]
-                    let playerTwo = game.players[randomNumberBetween(game.players.length-1,0,playerOneNumber)]
-                    game.round++
-                    console.log(`round ${game.round}`);
-                    console.log(`between ${playerOne} and ${playerTwo}`);
-                    console.log(`the number is: ${currentRandomNumber}`);
-                    currentRandomNumber % 2 === 0 ? 
-                    playerOne.score++
-                    : playerTwo.score++
-                    playerOne.score > playerTwo.score ? 
-                    console.log(`${playerOne.name} WON !! 🎊🎊`):
-                    console.log(`${playerTwo.name} WON !! 🎊🎊`)
-
-                    console.log(playerOne.name ,'have', playerOne.score);
-                    console.log(playerTwo.name ,'have', playerTwo.score);
-                    if(playerOne.score === pointsToWin){
-                        game.winner = playerOne.name
-
-                        break
-                    }else if(playerTwo.score === pointsToWin){
-                        game.winner = playerTwo.name
-                        break
+                PvP(game)
+                console.log(`LOADING BOSS FIGHT`)
+                const bossLoading = setInterval(() =>{
+                    bossLoadingBar.tick();
+                    if (bossLoadingBar.complete) {
+                        clearInterval(bossLoading)
+                        console.log(`${game.winner} ARE YOU READY FOR THE BOSS FIGHT???`)
+                        setTimeout(() =>{
+                            PvP(new Game([game.winner,new Player('BOSS')]));
+                        },1000)
                     }
-                }
-                let scoreTable = game.players.sort((player1,player2) => player2.score - player1.score).reduce((acc,player,index) => {acc[index+1]=player; return acc},{})
-                console.table(scoreTable)
-                console.log(`WINNER IS ${game.winner} 🏆🏆🏆`);
-            },1000)
+                },50)
 
+                },2000)
+            
         }
     }, 100);
 
