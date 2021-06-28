@@ -56,16 +56,16 @@ console.log('game loading');
                     console.log(`between ${playerOne} and ${playerTwo}`);
                     console.log(`the number is: ${currentRandomNumber}`);
                     currentRandomNumber % 2 === 0 ? 
-                    game.playerOne.score++
-                    : game.playerTwo.score++
-                    game.playerOne.score > game.playerTwo.score ? 
-                    console.log(`${game.playerOne.name} WON !! 🎊🎊`):
-                    console.log(`${game.playerTwo.name} WON !! 🎊🎊`)
+                    playerOne.score++
+                    : playerTwo.score++
+                    playerOne.score > playerTwo.score ? 
+                    console.log(`${playerOne.name} WON !! 🎊🎊`):
+                    console.log(`${playerTwo.name} WON !! 🎊🎊`)
 
-                    console.log(game.playerOne.name ,'have', game.playerOne.score);
-                    console.log(game.playerTwo.name ,'have', game.playerTwo.score);
-                    if(game.playerOne.score === pointsToWin){
-                        game.winner = game.playerOne.name
+                    console.log(playerOne.name ,'have', playerOne.score);
+                    console.log(playerTwo.name ,'have', playerTwo.score);
+                    if(playerOne.score === pointsToWin){
+                        game.winner = playerOne.name
 
                         break
                     }else if(playerTwo.score === pointsToWin){
